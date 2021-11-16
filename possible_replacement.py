@@ -1,5 +1,5 @@
 # load the query_auto_completion model and run it
-class QueryAutoCompletion():
+class PossibleReplacement():
     def __init__(self, someVariable):
         self.someVariable = someVariable
 
@@ -7,7 +7,7 @@ class QueryAutoCompletion():
         print(self.someVariable)
 
 
-def queryAutoComplete():
-    newObj = QueryAutoCompletion("queryAutoComplete")
+def possibleReplace():
+    newObj = PossibleReplacement("PossibleReplacement")
     newObj.someFunction()
     print("yayyyyyy!")

@@ -7,11 +7,8 @@ class SearchClass():
         print(self.someVariable)
 
 
-def main():
-    newObj = SearchClass("SI650")
+def search():
+    newObj = SearchClass("search")
     newObj.someFunction()
     print("yayyyyyy!")
 
-
-if __name__=="__main__":
-    main()
