@@ -16,9 +16,20 @@ debugging = 1
 
 
 class Model:
+
     RANK_CUTOFF = 100
     SEED = 42
     QUERY_CUTOFF = 30
+    def __init__(self, path_data, path_topic, path_qrel):
+        self.init_data(path_data)
+        self.create_index()
+        self.get_topic_qrel(path_topic, path_qrel)
+        self.init_pymodels()
+        self.train_model()
+        if debugging == 1:
+          print("init finished")
+    
+    
     def init_data(self, path):
         foodresults = pd.read_csv(path, encoding="latin-1")
         data=[]
@@ -58,6 +69,7 @@ class Model:
 
     
     def create_index(self):
+    	#TODO: add if condition
         self.index_dir = "./docs_index"
         indexer = pt.DFIndexer(self.index_dir, overwrite=True)
         index_ref = indexer.index(self.df["recipe"], self.df["docno"], self.df["recipe_name"], self.df["keywords"], 
@@ -130,15 +142,7 @@ class Model:
         if debugging == 1:
           print("train_model finished")
 
-    def __init__(self, path_data, path_topic, path_qrel):
-        self.init_data(path_data)
-        self.create_index()
-        self.get_topic_qrel(path_topic, path_qrel)
-        self.init_pymodels()
-        self.train_model()
-        if debugging == 1:
-          print("init finished")
-
+    
     def get_query_results(self, query):
         query_results = self.lmart_x_pipe(query).head(self.QUERY_CUTOFF)["docno"].to_list()
         results = []
@@ -160,6 +164,15 @@ class Model:
             rank += 1
         return results
 
+    def filter_result(self, df):
+    	# Add filter here
+    	pass
+
+    def expand_query(self, qrel, results):
+        pass
+    
+    def ingredients_sub(self, results):
+        pass
 
 
 def pyterrier_init():
@@ -184,7 +197,21 @@ if __name__ == '__main__':
     query_submit = query_form.form_submit_button(label='Submit')
 
     if query_submit:
-        results = model.get_query_results(query_text) # list of dict format
-        df = pd.Dataframe(results)
-        df
+        #results = model.get_query_results(query_text) # list of dict format
+
+        # query_form = st.form(key='user_query_expand')
+        
+        #df = pd.DataFrame(results)
+        #df
+        #expand query to get dropbox
+        drop_box = ["tomato","potato"]
+        drop_box_select = st.selectbox(label = "Select a choice", options=drop_box)
+        if drop_box_select == drop_box[0]:
+            results = model.get_query_results(drop_box[0])
+            df = pd.DataFrame(results)
+            #filter the result
+            #df = model.filter_result(df)
+            df
+        #elif 
+
 
