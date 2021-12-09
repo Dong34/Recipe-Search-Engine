@@ -10,7 +10,7 @@ import urllib.parse
 import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.loader import ItemLoader
-from items import FoodcomItem
+#from items import FoodcomItem
 from scrapy import Request
 from tqdm import tqdm
 
@@ -18,7 +18,7 @@ from tqdm import tqdm
 class foodcom(scrapy.Spider):
 
     name = 'food-com'
-    custom_settings = {"FEEDS": {"foodresults_3.csv":{"format":"csv"}}}
+    custom_settings = {"FEEDS": {"foodresults_new.csv":{"format":"csv"}}}
 
     page = 1
     nxp = 1
@@ -56,6 +56,7 @@ class foodcom(scrapy.Spider):
     def parse_details(self,response):
         print("OK")
         # get RECIPE
+        url = response.url
         res = response.xpath('//script[@type="application/ld+json"]/text()').get()
         recipe = json.loads(res)
         i = 0
@@ -117,7 +118,7 @@ class foodcom(scrapy.Spider):
 
         # yield to items / send to FEEDS
         yield{'name':name,'ingredients':ingredients,'recipe':ls,'rate':rate,'views':views,'description':description,
-              'keywords':keywords,'calories':calories,'fatContent':fatContent, 'proteinContent':proteinContent}
+              'keywords':keywords,'calories':calories,'fatContent':fatContent, 'proteinContent':proteinContent, 'url':url}
 
 
 # main driver #
