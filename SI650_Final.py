@@ -235,12 +235,12 @@ if __name__ == '__main__':
         #expand query to get dropbox
         drop_box = model.expand_query(query_text, results)
         drop_box_select = st.selectbox(label = "We suggest", options=drop_box)
-        if drop_box_select == drop_box[0]:
-            results = model.get_query_results(drop_box[0])
+        for i in range(len(drop_box)):
+          if drop_box_select == drop_box[i]:
+            results = model.get_query_results(drop_box[i])
             df = pd.DataFrame(results)
             #filter the result
             #df = model.filter_result(df)
-            df
         #elif 
 
 
