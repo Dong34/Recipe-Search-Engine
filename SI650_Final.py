@@ -168,8 +168,32 @@ class Model:
     	# Add filter here
     	pass
 
-    def expand_query(self, qrel, results):
-        pass
+    def expand_query(self, query, results):
+        data = ''
+        for i in range(len(results)):
+          data+=results.iloc[i]["ingredients"]
+          data+=" "
+
+        stop_words = set(stopwords.words('english'))
+        my_stop_list = ["lb", "teaspoons", "teaspoon", "optional", "tablespoon", "tablespoons", "tsp", "g", "kg", "lbs"]
+        for stop_word in my_stop_list:
+          stop_words.add(stop_word)
+        tokenizer = RegexpTokenizer(r'\w+')
+        tokens = tokenizer.tokenize(data)
+        new_tokens= [token for token in tokens if not token.isnumeric() 
+                        and not token in stop_words]
+        all_counts = FreqDist(ngrams(new_tokens, 2))
+        expand_dict = dict()
+        for key in all_counts.keys():
+          if query in key:
+            expand_dict[key] = all_counts[key]
+        sort_expand_dict = sorted(expand_dict.items(), key=lambda x: x[1], reverse=True)
+        expand_list = sort_expand_dict[0:3]
+        drop_list = [query]
+        for item in expand_list:
+          drop_list_item = item[0][0]+" "+item[0][1]
+          drop_list.append(drop_list_item)
+        return drop_list
     
     def ingredients_sub(self, results):
         pass
@@ -197,14 +221,14 @@ if __name__ == '__main__':
     query_submit = query_form.form_submit_button(label='Submit')
 
     if query_submit:
-        #results = model.get_query_results(query_text) # list of dict format
+        results = model.get_query_results(query_text) # list of dict format
 
         # query_form = st.form(key='user_query_expand')
         
-        #df = pd.DataFrame(results)
+        results = pd.DataFrame(results)
         #df
         #expand query to get dropbox
-        drop_box = ["tomato","potato"]
+        drop_box = model.expand_query(query_text, results)
         drop_box_select = st.selectbox(label = "Select a choice", options=drop_box)
         if drop_box_select == drop_box[0]:
             results = model.get_query_results(drop_box[0])
