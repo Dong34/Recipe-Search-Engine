@@ -233,7 +233,7 @@ if __name__ == '__main__':
         #df
         #expand query to get dropbox
         drop_box = model.expand_query(query_text, results)
-        drop_box_select = st.selectbox(label = "Select a choice", options=drop_box)
+        drop_box_select = st.selectbox(label = "We suggest", options=drop_box)
         if drop_box_select == drop_box[0]:
             results = model.get_query_results(drop_box[0])
             df = pd.DataFrame(results)
