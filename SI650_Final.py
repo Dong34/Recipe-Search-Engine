@@ -173,6 +173,7 @@ class Model:
     	pass
 
     def expand_query(self, query, results):
+        results = pd.DataFrame(results)
         data = ''
         for i in range(len(results)):
           data+=results.iloc[i]["ingredients"]
@@ -229,7 +230,7 @@ if __name__ == '__main__':
 
         # query_form = st.form(key='user_query_expand')
         
-        results = pd.DataFrame(results)
+        
         #df
         #expand query to get dropbox
         drop_box = model.expand_query(query_text, results)
