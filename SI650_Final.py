@@ -14,7 +14,8 @@ from nltk import ngrams, FreqDist
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
-
+import nltk
+from nltk.stem import WordNetLemmatizer 
 
 debugging = 1
 
@@ -168,9 +169,39 @@ class Model:
             rank += 1
         return results
 
-    def filter_result(self, df):
-    	# Add filter here
-    	pass
+    def filter_result(df, items, out=True):
+    # Add filter here
+    # items: the word we want to filter
+    # option: tool or ingredient
+    # Return: All the search results that do not contain the word ingredient in the "ingredients" description.
+
+        if items == []:
+            return df
+
+        df['ingredients'] = df['ingredients'].str.lower()
+        df['description'] = df['description'].str.lower()
+        df['keywords'] = df['keywords'].str.lower()
+        df['filtering'] = df['ingredients'] + ' ' + df['description'] + ' ' + df['keywords']
+        
+
+        # Init the Wordnet Lemmatizer
+        lemmatizer = WordNetLemmatizer()
+        for i in range(len(df)):
+            sentence = df['filtering'][i]
+            word_list = nltk.word_tokenize(sentence)
+            # Lemmatize list of words and join
+            df['filtering'][i] = ' '.join([lemmatizer.lemmatize(w) for w in word_list])
+        
+        for i in items:
+            w = lemmatizer.lemmatize(i)
+            
+            if out == True:
+                df = df[(~(df['filtering'].str.contains(w)))]
+            else:
+                df = df[((df['filtering'].str.contains(w)))]
+
+        
+        return df
 
     def expand_query(self, query, results):
         results = pd.DataFrame(results)
@@ -200,8 +231,22 @@ class Model:
           drop_list.append(drop_list_item)
         return drop_list
     
-    def ingredients_sub(self, results):
-        pass
+    
+    # ingredient type: First letter is capital and the remaining letters are lower case.
+    # Example: Beer, Apple pie spicy
+    def ingredient_sub(ingredient):
+      # substitution = pd.read_csv("substitutes.csv")
+      # if ingredient in substitution['Ingredient'].unique():
+      #   s = substitution[substitution['Ingredient'] == ingredient]['Substitutes']
+      #   cut = ' ' * 4
+      #   amount = re.split(cut + '|\n', str(substitution[substitution['Ingredient'] == ingredient]['Amount']))[1]   
+      #   s = str(substitution[substitution['Ingredient'] == ingredient]['Substitutes'])
+      #   # print(s)
+      #   s = re.split(cut + '|\n', s)[1]
+        
+      #   return amount, s
+      # return None
+      pass
 
 
 def pyterrier_init():
@@ -221,6 +266,11 @@ if __name__ == '__main__':
     #Display
     st.title("SI 650 Final Project")
 
+    # initialization
+    nltk.download('wordnet')
+    nltk.download('punkt')
+    nltk.download('averaged_perceptron_tagger')
+
     query_form = st.form(key='user_query')
     query_text = query_form.text_input(label='Search on Food')
     query_submit = query_form.form_submit_button(label='Submit')
@@ -229,8 +279,6 @@ if __name__ == '__main__':
         results = model.get_query_results(query_text) # list of dict format
 
         # query_form = st.form(key='user_query_expand')
-        
-        
         #df
         #expand query to get dropbox
         drop_box = model.expand_query(query_text, results)
@@ -239,8 +287,45 @@ if __name__ == '__main__':
           if drop_box_select == drop_box[i]:
             results = model.get_query_results(drop_box[i])
             df = pd.DataFrame(results)
-            #filter the result
-            #df = model.filter_result(df)
+
+            st.write("Filter any tools that you don't have:")
+            oven = st.checkbox('oven')
+            microwave = st.checkbox('microwave')
+            filterword_out = st.text_input("Input anything that you want to filter out:")
+
+            st.write("Filter any feature that you want your recipe to have:")
+            healthy = st.checkbox('healthy')
+            low_cholesterol = st.checkbox('low cholesterol')
+            inexpensive = st.checkbox('inexpensive')
+            filterword = st.text_input("Input anything that you want to filter:")
+            
+            wSet_out = []
+            wSet = []
+            if oven:
+                wSet_out.append('oven')
+            if microwave:
+                wSet_out.append('microwave')
+            if filterword_out:
+                wSet_out.append(filterword_out)
+
+            if healthy:
+                wSet.append('healthy')
+            if low_cholesterol:
+                wSet.append('low cholesterol')
+            if inexpensive:
+                wSet.append('inexpensive')
+            if filterword:
+                wSet.append(filterword)
+
+
+            st.write("----------------------------------------------")
+    
+            # filtered_result = filter_result(search_result.copy(), toolSet, 'tool')
+            # filtered_result2 = filter_result(filtered_result.copy(), ingreSet, 'ingredient')
+            filtered_result1 = model.filter_result(df.copy(deep=True), wSet_out, out=True)
+            filtered_result2 = model.filter_result(filtered_result1.copy(deep=True), wSet, out=False)
+            filtered_result2
+
         #elif 
 
 
