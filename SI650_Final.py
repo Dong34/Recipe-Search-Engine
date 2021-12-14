@@ -287,6 +287,20 @@ def initialize():
     return model
 
 
+def ingredient_sub(ingredient):
+    substitution = pd.read_csv("substitutes.csv")
+    if ingredient in substitution['Ingredient'].unique():
+        s = substitution[substitution['Ingredient'] == ingredient]['Substitutes']
+        cut = ' ' * 4
+        amount = re.split(cut + '|\n', str(substitution[substitution['Ingredient'] == ingredient]['Amount']))[1]   
+        s = str(substitution[substitution['Ingredient'] == ingredient]['Substitutes'])
+        # print(s)
+        s = re.split(cut + '|\n', s)[1]
+        
+        return amount, s
+    return None
+
+
 # Main function
 if __name__ == '__main__':
     model = initialize()
@@ -352,6 +366,38 @@ if __name__ == '__main__':
             filtered_result2 = model.filter_result(filtered_result1, wSet)
             filtered_result2
 
+            st.write("Choose a result")
+            result_selection_box = []
+            RESULTS_FOR_SELECT = 3
+            my_stop_words = ["lb", "teaspoon", "teaspoons", "optional", "tablespoon", "tablespoons", "tsp", "g", "kg", "lbs"]
+            i = 0
+            for row in filtered_result2:
+                i = i + 1
+                if i > RESULTS_FOR_SELECT:
+                    break
+                result_selection_box.append(row['recipe_name'])
+
+
+                result_selection_box_select = st.selectbox(label = "Click on a recipe to see details", options=result_selection_box)
+
+            if result_selection_box_select == result_selection_box[0]:
+                result_recipe = filtered_result2.iloc[[0]]
+                st.subheader(result_recipe['recipe_name'])
+                st.write(result_recipe['recipe'])
+                result_ingredients = result_recipe['ingredients'].split(',')
+                for ingredient in result_ingredients:
+                    st.write(ingredient)
+                ingredient_substitution_box = st.selectbox(label = "Select an ingredient for subsitution", options = result_ingredients)
+                for i in len(result_ingredients):
+                    if ingredient_substitution_box == result_ingredients[i]:
+                        ingredient_words = ingredient_substitution_box.split()
+                        for word in ingredient_words:
+                            if not (word.isnumeric()) or word in my_stop_words():
+                                substitution =  ingredient_sub(word)
+                                if subsitution is not None:
+                                    st.write("%s   -->   %s"%(word, substitution))
+                                else:
+                                    st.write("Did not find substitution for this ingredient")
         #elif 
 
 
