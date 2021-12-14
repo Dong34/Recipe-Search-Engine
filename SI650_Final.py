@@ -393,7 +393,7 @@ if __name__ == '__main__':
                         for word in ingredient_words:
                             if not (word.isnumeric()) or (word in my_stop_words):
                                 substitution =  ingredient_sub(word)
-                                if subsitution is not None:
+                                if substitution is not None:
                                     st.write("%s   -->   %s"%(word, substitution))
                                 else:
                                     st.write("Did not find substitution for this ingredient")
