@@ -391,7 +391,7 @@ if __name__ == '__main__':
                     if ingredient_substitution_box == result_ingredients[i]:
                         ingredient_words = ingredient_substitution_box.split()
                         for word in ingredient_words:
-                            if not (word.isnumeric()) or word in my_stop_words():
+                            if not (word.isnumeric()) or (word in my_stop_words):
                                 substitution =  ingredient_sub(word)
                                 if subsitution is not None:
                                     st.write("%s   -->   %s"%(word, substitution))
