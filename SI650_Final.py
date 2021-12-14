@@ -290,15 +290,15 @@ def initialize():
 def ingredient_sub(ingredient):
     substitution = pd.read_csv("substitutes.csv")
     for index,row in substitution.iterrows():
-        if row["ingredient"] in ingredient:
-            s = substitution[substitution['Ingredient'] == ingredient]['Substitutes']
-            cut = ' ' * 4
-            amount = re.split(cut + '|\n', str(substitution[substitution['Ingredient'] == ingredient]['Amount']))[1]   
-            s = str(substitution[substitution['Ingredient'] == ingredient]['Substitutes'])
+        if row["Ingredient"] in ingredient:
+            s = row['Substitutes']
+            #cut = ' ' * 4
+            #amount = re.split(cut + '|\n', str(substitution[substitution['Ingredient'] == ingredient]['Amount']))[1]   
+            #s = str(substitution[substitution['Ingredient'] == ingredient]['Substitutes'])
             # print(s)
-            s = re.split(cut + '|\n', s)[1]
+            #s = re.split(cut + '|\n', s)[1]
         
-            return amount, s
+            return s
     return None
 
 
