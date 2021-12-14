@@ -169,7 +169,7 @@ class Model:
             rank += 1
         return results
     
-    def filter_result_out(df, items):
+    def filter_result_out(self, df, items):
     # Add filter here
     # items: the word we want to filter
     # option: tool or ingredient
@@ -198,7 +198,7 @@ class Model:
             
         return df
 
-    def filter_result(df, items):
+    def filter_result(self, df, items):
     # Add filter here
     # items: the word we want to filter
     # option: tool or ingredient
