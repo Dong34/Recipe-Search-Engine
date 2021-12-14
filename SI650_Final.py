@@ -228,7 +228,7 @@ class Model:
         return df
 
     def expand_query(self, query, results):
-        if len(query.spilt())>1:
+        if len(query.split())>1:
             return [query]
         results = pd.DataFrame(results)
         data = ''
