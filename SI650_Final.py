@@ -168,8 +168,8 @@ class Model:
             results.append(result_dict)
             rank += 1
         return results
-
-    def filter_result(df, items, out=True):
+    
+    def filter_result_out(df, items):
     # Add filter here
     # items: the word we want to filter
     # option: tool or ingredient
@@ -194,12 +194,36 @@ class Model:
         
         for i in items:
             w = lemmatizer.lemmatize(i)
+            df = df[(~(df['filtering'].str.contains(w)))]
             
-            if out == True:
-                df = df[(~(df['filtering'].str.contains(w)))]
-            else:
-                df = df[((df['filtering'].str.contains(w)))]
+        return df
 
+    def filter_result(df, items):
+    # Add filter here
+    # items: the word we want to filter
+    # option: tool or ingredient
+    # Return: All the search results that do not contain the word ingredient in the "ingredients" description.
+
+        if items == []:
+            return df
+
+        df['ingredients'] = df['ingredients'].str.lower()
+        df['description'] = df['description'].str.lower()
+        df['keywords'] = df['keywords'].str.lower()
+        df['filtering'] = df['ingredients'] + ' ' + df['description'] + ' ' + df['keywords']
+        
+
+        # Init the Wordnet Lemmatizer
+        lemmatizer = WordNetLemmatizer()
+        for i in df.index:
+            sentence = df['filtering'][i]
+            word_list = nltk.word_tokenize(sentence)
+            # Lemmatize list of words and join
+            df['filtering'][i] = ' '.join([lemmatizer.lemmatize(w) for w in word_list])
+        
+        for i in items:
+            w = lemmatizer.lemmatize(i)
+            df = df[((df['filtering'].str.contains(w)))]
         
         return df
 
@@ -319,11 +343,10 @@ if __name__ == '__main__':
 
 
             st.write("----------------------------------------------")
-    
-            # filtered_result = filter_result(search_result.copy(), toolSet, 'tool')
-            # filtered_result2 = filter_result(filtered_result.copy(), ingreSet, 'ingredient')
-            filtered_result1 = model.filter_result(df.copy(deep=True), wSet_out, out=True)
-            filtered_result2 = model.filter_result(filtered_result1.copy(deep=True), wSet, out=False)
+ 
+            sr = df.copy(deep=True)
+            filtered_result1 = model.filter_result_out(sr, wSet_out)
+            filtered_result2 = model.filter_result(filtered_result1, wSet)
             filtered_result2
 
         #elif 
