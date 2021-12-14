@@ -371,14 +371,13 @@ if __name__ == '__main__':
             RESULTS_FOR_SELECT = 3
             my_stop_words = ["lb", "teaspoon", "teaspoons", "optional", "tablespoon", "tablespoons", "tsp", "g", "kg", "lbs"]
             i = 0
-            for row in filtered_result2:
+            for index, row in filtered_result2.iterrows():
                 i = i + 1
                 if i > RESULTS_FOR_SELECT:
                     break
                 result_selection_box.append(row['recipe_name'])
 
-
-                result_selection_box_select = st.selectbox(label = "Click on a recipe to see details", options=result_selection_box)
+            result_selection_box_select = st.selectbox(label = "Click on a recipe to see details", options=result_selection_box)
 
             if result_selection_box_select == result_selection_box[0]:
                 result_recipe = filtered_result2.iloc[[0]]
