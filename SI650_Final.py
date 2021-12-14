@@ -186,7 +186,7 @@ class Model:
 
         # Init the Wordnet Lemmatizer
         lemmatizer = WordNetLemmatizer()
-        for i in range(len(df)):
+        for i in df.index:
             sentence = df['filtering'][i]
             word_list = nltk.word_tokenize(sentence)
             # Lemmatize list of words and join
