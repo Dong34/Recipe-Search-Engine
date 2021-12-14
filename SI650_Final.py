@@ -159,6 +159,7 @@ class Model:
             'recipe': self.df[self.df['docno'] == result]['original_recipe'].to_list()[0],
             'rate': self.df[self.df['docno'] == result]['rate'].to_list()[0],
             'views': self.df[self.df['docno'] == result]['views'].to_list()[0],
+            'keywords': self.df[self.df['docno'] == result]['keywords'].to_list()[0],
             'description': self.df[self.df['docno'] == result]['original_description'].to_list()[0],
             'calories': self.df[self.df['docno'] == result]['calories'].to_list()[0],
             'fatContent': self.df[self.df['docno'] == result]['fatContent'].to_list()[0],
