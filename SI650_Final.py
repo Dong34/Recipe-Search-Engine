@@ -391,7 +391,7 @@ if __name__ == '__main__':
                     st.write(ingredient)
                 ingredient_substitution_box = st.selectbox(label = "Select an ingredient for subsitution", options = result_ingredients)
                 for i in range(len(result_ingredients)):
-                    if ingredient_substitution_box == result_ingredients[i]:
+                    if ingredient_substitution_box == result_ingredients[0]:
                         ingredient_words = ingredient_substitution_box.split()
                         for word in ingredient_words:
                             st.write(word)
