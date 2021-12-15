@@ -291,7 +291,7 @@ def ingredient_sub(ingredient):
     substitution = pd.read_csv("substitutes.csv")
     for index,row in substitution.iterrows():
         temp = row["Ingredient"]
-        st.write(temp)
+        # st.write(temp)
         if ingredient in temp.lower():
             s = row['Substitutes']
             #cut = ' ' * 4
