@@ -401,8 +401,6 @@ if __name__ == '__main__':
                                 substitution =  ingredient_sub(word)
                                 if substitution is not None:
                                     st.write("%s   -->   %s"%(word, substitution))
-                                else:
-                                    st.write("Did not find substitution for this ingredient")
         #elif 
 
 
