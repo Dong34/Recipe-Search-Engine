@@ -384,7 +384,7 @@ if __name__ == '__main__':
                 result_recipe = filtered_result2.iloc[[0]]
                 st.subheader(result_recipe['recipe_name'])
                 st.write(result_recipe['recipe'])
-                result_ingredients = str(result_recipe['ingredients']).split(',')
+                result_ingredients = result_recipe['ingredients'].tolist()
                 st.write(result_ingredients)
                 for ingredient in result_ingredients:
                     st.write(ingredient)
