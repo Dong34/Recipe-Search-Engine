@@ -388,7 +388,7 @@ if __name__ == '__main__':
                 st.write(result_recipe['recipe'])
                 result_ingredients = result_recipe['ingredients'].tolist()
                 result_ingredients = result_ingredients[0].split(',')
-                st.write(result_ingredients)
+                # st.write(result_ingredients)
                 for ingredient in result_ingredients:
                     st.write(ingredient)
                 ingredient_substitution_box = st.selectbox(label = "Select an ingredient for subsitution", options = result_ingredients)
@@ -396,7 +396,7 @@ if __name__ == '__main__':
                     if ingredient_substitution_box == result_ingredients[0]:
                         ingredient_words = ingredient_substitution_box.split()
                         for word in ingredient_words:
-                            st.write(word)
+                            # st.write(word)
                             if not (word.isnumeric()) or (word not in my_stop_words):
                                 substitution =  ingredient_sub(word)
                                 if substitution is not None:
