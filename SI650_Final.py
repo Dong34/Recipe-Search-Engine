@@ -385,6 +385,7 @@ if __name__ == '__main__':
                 st.subheader(result_recipe['recipe_name'])
                 st.write(result_recipe['recipe'])
                 result_ingredients = result_recipe['ingredients'].tolist()
+                result_ingredients = result_ingredients[0].split(',')
                 st.write(result_ingredients)
                 for ingredient in result_ingredients:
                     st.write(ingredient)
