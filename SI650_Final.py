@@ -290,7 +290,9 @@ def initialize():
 def ingredient_sub(ingredient):
     substitution = pd.read_csv("substitutes.csv")
     for index,row in substitution.iterrows():
-        if row["Ingredient"].lower() in ingredient:
+        temp = row["Ingredient"]
+        st.write(temp)
+        if ingredient in temp.lower():
             s = row['Substitutes']
             #cut = ' ' * 4
             #amount = re.split(cut + '|\n', str(substitution[substitution['Ingredient'] == ingredient]['Amount']))[1]   
@@ -390,7 +392,7 @@ if __name__ == '__main__':
                 for ingredient in result_ingredients:
                     st.write(ingredient)
                 ingredient_substitution_box = st.selectbox(label = "Select an ingredient for subsitution", options = result_ingredients)
-                for i in range(len(result_ingredients)):
+                for i in range(1):
                     if ingredient_substitution_box == result_ingredients[0]:
                         ingredient_words = ingredient_substitution_box.split()
                         for word in ingredient_words:
